@@ -199,7 +199,7 @@ jobs:
           mkdir -p $HOME/.kube
           echo "${{ secrets.MYKUBECONFIG_BASE64 }}" | base64 -d > $HOME/.kube/config
       - name: deploy with helm
-        working-directory: ./chart
+        working-directory: ./KubernetesManager/my-chart
         run: |
           helm dependency update
           helm upgrade --install dihia-praxis-form . --create-namespace -n "${NAMESPACE}"
