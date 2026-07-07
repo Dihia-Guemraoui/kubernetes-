@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: dihia-praxis-form-tls
+  namespace: {{ .Release.Namespace }}
+  # labels:
+  #   app.kubernetes.io/instance: praxis-form
+  #   app.kubernetes.io/managed-by: Helm
+spec:
+  secretName: dihia-praxis-form-tls
+  dnsNames:
+    - dihia.praxis-form.de
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: praxis-form-letsencrypt-prod
+  usages:
+    - digital signature
+    - key encipherment

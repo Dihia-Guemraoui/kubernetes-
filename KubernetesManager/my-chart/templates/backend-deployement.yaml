@@ -1,0 +1,41 @@
+#deployement de notre image dans le cluster kubernetes
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: backend
+spec:
+  replicas: {{ .Values.backend.replicas }} #create 2 pods
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      imagePullSecrets:     
+        - name: {{ .Values.imagePullSecrets.name}}
+      containers:
+        - name: backend
+          image: "{{ .Values.backend.image.repo}}:{{ .Values.backend.image.tag}}"
+          imagePullPolicy: Always
+          env:
+            - name: MONGODB_URI
+              value: mongodb://praxis-form-mongodb.praxis.svc.cluster.local:27017/paris-dihia
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: empty-secret
+                  key:  JWT_SECRET
+            - name: JWT_EXP_MINUTES
+              value: '120'
+            - name: ADMIN_DEFAULT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: empty-secret
+                  key:  ADMIN_DEFAULT_PASSWORD
+          ports:
+            - containerPort: 8080 

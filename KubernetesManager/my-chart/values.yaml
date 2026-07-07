@@ -1,0 +1,35 @@
+backend:
+  replicas: 2
+  image:
+    repo: ghcr.io/dihia-guemraoui/backend
+    tag: v1.0.0
+  
+imagePullSecrets:
+  name: regcred
+
+frontend:
+  apiUrl: https://dihia.praxis-form.de
+  replicas : 2
+  image: 
+    repo: ghcr.io/dihia-guemraoui/frontend
+    tag: v1.0.0
+
+grafana:
+  enabled: true
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    # Values can be templated
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+      nginx.ingress.kubernetes.io/force-ssl-redirect: 'false'
+    path: /
+    pathType: Prefix
+
+    hosts:
+      - grafana.paxis-form.de
+   
+    tls:
+      - secretName: grafan-praxis-form-tls
+        hosts:
+          - grafan-praxis-form-de

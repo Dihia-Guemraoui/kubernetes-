@@ -1,0 +1,29 @@
+#deployement de notre image dans le cluster kubernetes
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: workshopdihia
+  labels:
+    app: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      imagePullSecrets:     #ajouter les secret ici 
+        - name: regcred
+      containers:
+        - name: frontend
+          image: ghcr.io/dihia-guemraoui/frontend:v1.0.0
+          imagePullPolicy: Always  #pour lui dire de retirer toujour limage dici 
+          env:
+            - name: BACKEND_URL
+              value: "https://dihia.praxis-form.de"
+          ports:
+            - containerPort: 80
